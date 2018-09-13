@@ -1,0 +1,28 @@
+//Definition of protocol buffer messages and Person service.
+
+syntax = "proto3";
+
+package personapp;
+
+// The person service definition. All we'll do for now is query on the name and get back the matching rows, if any.
+service Person {
+    // Sends a greeting
+    rpc GetPerson (PersonRequest) returns (PersonResponse) {}
+}
+
+// The request message containing the person's name.
+message PersonRequest {
+    string name = 1;
+}
+
+// The response message containing the matching people.
+message PersonResponse {
+
+    message Person {
+        string name = 1;
+        string iso_country = 2;
+    } 
+    repeated Person persons = 1;
+    
+}
+

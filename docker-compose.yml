@@ -1,0 +1,56 @@
+version: '3'
+
+services:
+        
+    db:
+        build: ./db
+        #image: postgres:latest
+        
+        volumes:
+            - dbdata:/var/lib/dbdata
+
+        networks:
+            - backend
+        ports:
+            - "5432:5432"
+
+    
+    flask-svc:
+        restart: always
+        build: ./flask-service
+        networks:
+            - backend
+        depends_on:
+            - db
+        ports:
+            - "5000:5000"
+
+            
+    grpc-svc:
+        build: ./grpc-service
+        networks:
+            - backend
+        depends_on:
+            - db
+        ports:
+            - "50051:50051"
+    
+    #
+    # website:
+    #     build: ./website
+    #     networks:
+    #         - frontend
+    #
+    
+networks:
+    backend:
+        
+    frontend:
+        
+            
+volumes:
+  dbdata:
+      
+      
+
+      

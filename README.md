@@ -1,75 +1,58 @@
-#TODO before 4pm
-
-1. fix form, make look nice, materialize etc
-2. fix db select in grpc 
-3. ensure all relevant content in 
-
-
 #personapp
-Dear R and J,
 
-Here's my attempt. 
+##Starting
 
-In mitigation for my sloth, the list of things I'd never seen before seven days ago includes Docker, SQLAlchemy, Marshmallow, gRPC, reactjs and Flask. I'd seen Material-UI and Postgres though!
+Prerequisite(s) - Docker present; this repository cloned.
 
-Best wishes,
-
-PP
+0. git clone https://github.com/PPFrance/persondb.git
+1. cd persondb && docker-compose build
+2. docker-compose run
+    * _The flask service has a dependency on the DB service. Nevertheless, the DB service sometimes surfaces *after* the flask service._
+    * _I have almost no expertise in docker aside from what I've read in the last week, so I can only suggest e.g.,_ docker-compose restart_._
 
 ##Description
 
-The app comprises four Docker components m
+This repository contains four docker services intended to be run in docker-compose: 
 
+* Node webserver 
+    * ./web-react-app
+    * The UI, available at http://localhost:4000
+        * Disappointingly, I couldn't get the material-UI objects such as TextField to play nicely with react - so I defaulted to using the standard HTML UI components, running rapidly out of time, this morning.
+    * When submit is pressed, Axios is used to send Ajax requests to the flask server.
+    
+    
+* Flask server
+    * ./flask-service
+    * Published at http://localhost:5000
+    * The flask_cors package is used to allow (indiscriminate) cross-browser support (necessary as the static site is obvs. served from different port).  
+    * The flask instance validates requests it receives using Marshmallow, which then fits into an SqlAlchemy model. 
+    * It attempts to create the schema on startup.
+        
+    
+* Postgres DB
+    * ./db
+        * Although this wasn't strictly necessary (as can be defined directly in docker-compose.yml), anticipated having create_users.sql, migrate_schema.sql to run, potentially. 
+    * Data is stored on a separate volume, which means it persists across docker-compose ups and downs.
+        
+        
+* gRPC server
+    * ./grpc-service
+    * SqlAlchemy is used to retrieve data from the postgres DB. 
+        * However, although I appreciate this is something of a cardinal sin, I simply couldn't find a way to make a library of common features available to the entire project, so had to copy-paste sqlalchemy_model.py from ./flask-service/src 
+        * In a real project, I would hope to have definitions of models generated at compile time from some common source, but as it is, I couldn't think of a way of doing this both minimally and neatly. 
+        * I'm certainly aware it stinks, doing it this way, but it's marginally better than nothing.
+    * There's also a bug in the query: I can't add a functioning _where_ clause using SqlAlchemy. Again, more time needed, my apologies.
+        
+        
+There is also a (non-dockerized) client for the the gRPC server:
 
-
-##Running
-
-_Prerequisite(s) - Docker installed and up to date; this repository cloned._ 
-
-0. *git clone https://github.com/PPFrance/persondb.git*
-1. *cd persondb && docker-compose build*
-2. *docker-compose run*
-3. Population of DB:
-    3.1 via manual curl HTTP POSTing e.g.,
-    * curl -i -H "Content-Type: application/json" -X POST -d '{"name": "Louis Fabre", "iso_country": "FR"}' http://localhost:5000/person
-    3.2 via web client:
-    * http://localhost:8642
+* gRPC client
+    * ./grpc-client
+    * It may be necessary to install grpc in the local python packages; pip install grpc.
+    * Usage:
+    * cd ./grpc-client/src
+    * python client.py
     
 
-##Services
+        
 
-
-
-###db (postgresql)
-
-###Flask service
-
-* Marshmallow to validate JSON from HTTP POST and marshall it into SQLAlchemy wrapper
-* SQLAlchemy to communicate with DB
-* flask_cors to allow remote origins; react website is published on 4000, flask on 5000.
-
-
-
-Things I would change before letting this into production:
-
-* thing one
-...
-* thing one hundred
-
-###gRPC service
-
-####protoc definitions
-
-
-
-#Tradeoffs etc
-##DB handling
-
-* A lot of time was spent trying to figure out how to handle setting up different users with different, appropriate, rights, before giving up and settling for postgres/postgres@postgres. 
-
-* Similarly, when an instance of the flask service is instantiated, it tries to create the schema in the DB.
-
-  * I wanted to define the schema once, in the SQLAlchemy model; I couldn't see, and can't see - and the internet can't, either, to the best of my knowledge - how easily to share the definition of something, e.g., an SQLAlchemy model, across multiple Docker comoonents. Or it can, but I couldn't find the answer.
-
-
-#React app and mat

@@ -35,13 +35,14 @@ services:
         ports:
             - "50051:50051"
     
-    #
-    # website:
-    #     build: ./website
-    #     networks:
-    #         - frontend
-    #
     
+    web-react:
+        build: ./web-react-app
+        networks:
+            - frontend
+        ports:
+            - "6000:6000"
+
 networks:
     backend:
         

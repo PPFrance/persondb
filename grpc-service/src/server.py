@@ -41,7 +41,7 @@ class PersonServicer(person_service_pb2_grpc.PersonServicer):
         session = Session()
         query = session.query(Person)
 
-        query.filter(Person.name == request.name)
+        query.filter_by(name = request.name)
             
         response = person_service_pb2.PersonResponse()
         for res in query.all():

@@ -5,7 +5,7 @@
 3. ensure all relevant content in 
 
 
-#persondb
+#personapp
 Dear R and J,
 
 Here's my attempt. 
@@ -18,7 +18,7 @@ PP
 
 ##Description
 
-This is a composition of four Docker components
+The app comprises four Docker components m
 
 
 

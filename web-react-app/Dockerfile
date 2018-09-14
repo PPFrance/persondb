@@ -1,20 +1,20 @@
 FROM node:latest
 
 
-COPY ./webapp/. ./app
+COPY ./webapp/package.json ./app/package.json
+COPY ./webapp/src/. ./app/src/.
+COPY ./webapp/public/. ./app/public/.
 
 WORKDIR /app
 
+RUN npm install
+RUN npm install react-scripts
 #Install material ui
 RUN npm install @material-ui/core
-
 #Axios, to be able to POST to the flask component.
 RUN npm install axios
-
-
 #Build for prod
 RUN npm run build --production
-
 # Install `serve` to run the application.
 RUN npm install -g serve
 

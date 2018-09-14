@@ -10,9 +10,9 @@
 # Copyright (c) SomeCorp.
 
 from flask import Flask, render_template, request
-from flask_cors import cross_origin
+from flask_cors import CORS
 app = Flask(__name__)
-
+CORS(app)
 
 
 from db_connection_mgr import get_connection_string
@@ -37,7 +37,6 @@ def hello():
     return "Hello!", 200
 
 @app.route('/person', methods=['POST'])
-@cross_origin()
 def person():
     """
     

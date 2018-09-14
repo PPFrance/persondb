@@ -1,16 +1,14 @@
 personapp
 =========
 
-Starting
---------
+Up and running
+--------------
 
-Prerequisite(s) - Docker present; this repository cloned.
+$ git clone https://github.com/PPFrance/persondb.git
+$ cd persondb && docker-compose build
+$ docker-compose run
 
-0. git clone https://github.com/PPFrance/persondb.git
-1. cd persondb && docker-compose build
-2. docker-compose run
-    * _The flask service has a dependency on the DB service. Nevertheless, the DB service sometimes surfaces *after* the flask service._
-    * _I have almost no expertise in docker aside from what I've read in the last week, so I can only suggest e.g.,_ docker-compose restart_._
+* _The flask service has a dependency on the DB service. Nevertheless, the DB service sometimes surfaces *after* the flask service. If that happens, please execute *docker-compose restart* (!)._
 
 
 
@@ -18,6 +16,7 @@ Description
 -----------
 
 _Summary_ 
+
 There are four docker services, intended to be run using docker-compose, coordinated by ./docker-compose.yml at the root. The GUI is available at http://localhost:4000. It sends HTTP POST Ajax requests to http://localhost:5000/person, at which there's a flask server. A postgres database is at port 5432, a gRPC server at port 50051. There's a console client to interrogate the database via gRPC, implemented in python, at ./grpc-client/src/client.py 
 
 There are a few infelicities in the layout of html, and even the logic. As per the request, I concentrated on learning and composing the technologies, all except two of which were new to me, rather than ironing out the functionality itself. The important thing, I thought, is data can be entered in the GUI, received in the Flask backend, marshalled in marshmallow, inserted via SqlAlchemy into postgres, then retrieved via a gRPC client communicating via protocol buffer messages.

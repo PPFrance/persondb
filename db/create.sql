@@ -1,3 +1,5 @@
+/*
+
 CREATE DATABASE postgres WITH ENCODING 'UTF8';
 
 
@@ -14,5 +16,6 @@ GRANT ALL PRIVILEGES ON persondb TO grpcsvcuser;
 GRANT SELECT ON ALL TABLES IN SCHEMA appschema TO grpcclientuser; 
 
 
+*/
 
 

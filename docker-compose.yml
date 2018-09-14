@@ -8,7 +8,6 @@ services:
         
         volumes:
             - dbdata:/var/lib/dbdata
-
         networks:
             - backend
         ports:
@@ -21,12 +20,14 @@ services:
         networks:
             - backend
         depends_on:
-            - db
+            - db 
+            #This causes the service not to be started until the db is up.
         ports:
             - "5000:5000"
 
             
     grpc-svc:
+        restart: always
         build: ./grpc-service
         networks:
             - backend
@@ -37,11 +38,15 @@ services:
     
     
     web-react:
+        restart: always
         build: ./web-react-app
+        depends_on:
+            - db
+        #It doesn't really depend on the db... this is just to stop the addition of this image from messing up the start order of the others.
         networks:
             - frontend
         ports:
-            - "6000:6000"
+            - "4000:4000"
 
 networks:
     backend:

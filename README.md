@@ -6,9 +6,9 @@ Up and running
 
 $ git clone https://github.com/PPFrance/persondb.git
 
-$ cd persondb && docker-compose build
+$ cd persondb
 
-$ docker-compose run
+$ docker-compose build && docker-compose run
 
 * _The flask service has a dependency on the DB service. Nevertheless, the DB service sometimes surfaces *after* the flask service. If that happens, please execute *docker-compose restart* (!)._
 
